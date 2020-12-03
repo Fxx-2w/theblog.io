@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-Web应用权威指南笔记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/03/Web%E5%BA%94%E7%94%A8%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time datetime="2020-12-03T05:04:12.880Z" itemprop="datePublished">2020-12-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="WEB安全权威指南笔记"><a href="#WEB安全权威指南笔记" class="headerlink" title="WEB安全权威指南笔记"></a>WEB安全权威指南笔记</h1><hr>
+<h2 id="HTTP-会话管理，同源策略"><a href="#HTTP-会话管理，同源策略" class="headerlink" title="HTTP,会话管理，同源策略"></a>HTTP,会话管理，同源策略</h2><ul>
+<li><p>百分号编码：</p>
+<p>中文和特殊符号不能直接用于URL，使用时需要经过百分号编码。即将字符以字节为单位转换成%xx的形式（xx为该字节的十六进制写法）</p>
+<p>空格应该为%20，有时被特殊处理为**<em>+**</em>。</p>
+</li>
+<li><p>Referer：</p>
+<p>当前请求是从哪个页面链接过来的。</p>
+<p>优点：</p>
+<ul>
+<li>为确保安全性主动检验Referer时，通过查看Referer，可以确认应用程序的跳转是否和预期一样</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><p>Referer可以被修改，未必会正确显示链接来源（可以被伪造）</p>
+</li>
+<li><p>当URL包含敏感信息时，Referer可能会引发安全问题。例如URL中包含的会话ID通过Referer泄露给外界。</p>
+</li>
+</ul>
+</li>
+<li><p>Cookie和会话管理</p>
+<ul>
+<li><p>通过set-cookie信息，Web服务器给浏览器下达了记住此cookie的指示。</p>
+</li>
+<li><p>之后浏览器会向服务器发送请求，其中包含Cookie值。</p>
+</li>
+<li><p>Cookie可以设置有效期，没有设置有效期的Cookie会在关闭浏览器之前一直有效。</p>
+</li>
+<li><p>Cookie中类似PHPSESSID的值被称为会话ID。</p>
+</li>
+<li><p>保存应用程序数据时几乎不会使用Cookie：</p>
+<ul>
+<li>Cookie可以保存的值的数量和长度有限</li>
+<li>Cookie值可以被用户看到或更改，所以不适用与存储敏感信息</li>
+</ul>
+</li>
+<li><p>会话ID的要求：</p>
+<ul>
+<li>不能被第三方推测（随机生成）</li>
+<li>不能被第三方劫持（认证后改变会话ID）</li>
+<li>不能向第三方泄露（使用TLS） </li>
+</ul>
+</li>
+</ul>
+<hr>
+<ul>
+<li><p>Cookie属性：</p>
+<ul>
+<li><p>Domain：</p>
+<ul>
+<li><p>Cookie不能指定不同域名。如 a.example.jp如果在Set-Cookie时指定了Domain=example.com，该Cookie会被忽略。</p>
+</li>
+<li><p>未指定Domain属性时，Cookie只被发送至生成他的服务器。此时Cookie发送范围最小，最安全。</p>
+<p>如，foo.example.com和bar.example.com都是托管在example.com上的网站，如果foo.example.com设置Domain=example.com，则他的Cookie信息会被泄漏到bar.example.com。</p>
+<p><strong>不设置Cookie的Domain属性是最佳实践</strong></p>
+</li>
+<li><p>Cookie Monster Bug：</p>
+<p>旧版浏览器可能存在。</p>
+<p>如果个人、团体、企业可以获得以google.com结尾的域名，意味着个人可以申请得到mailicious.google.com这个域名。使用旧版本Internet Explorer时，网站mailicious.google.com能够生成google.com的Cookie。</p>
+</li>
+</ul>
+</li>
+<li><p>安全属性：</p>
+<ul>
+<li>设置了Secure属性的Cookie仅在HTTPS传输的情况下可以被发送至服务器。未设置的Cookie无论是否为HTTPS都会发送。</li>
+</ul>
+</li>
+<li><p>HttpOnly属性：</p>
+<ul>
+<li><p>设置了HttpOnly后，JavaScript就不能访问该Cookie了（可以防止XSS攻击）。</p>
+</li>
+<li><p>即使设置了HttpOnly也无法彻底抵御跨站脚本攻击，但是可以加大攻击难度。</p>
+</li>
+<li><p>使用PHP时，只需要在php.ini中添加：</p>
+<p><code>session.cookie_httponly = on</code></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>浏览器安全功能</p>
+<ul>
+<li><p>沙盒基本思想</p>
+<ul>
+<li>只有用户确认了程序的发行方并且允许运行的情况下，程序才能被允许运行。</li>
+<li>提供限制程序权限的沙盒环境</li>
+</ul>
+</li>
+<li><p>在沙盒中，程序权限受到制约，即使编写了恶意程序也无法对用户造成伤害。</p>
+</li>
+<li><p>沙盒主要限制了以下功能：</p>
+<ul>
+<li>禁止访问本地文件</li>
+<li>禁止使用打印机等资源（可以显示页面）</li>
+<li>限制网络访问（同源策略）</li>
+</ul>
+</li>
+<li><p>同源条件：</p>
+<ul>
+<li>URL主机域名一致</li>
+<li>协议一致（http，https）</li>
+<li>端口号一致</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="Web应用的各种安全隐患"><a href="#Web应用的各种安全隐患" class="headerlink" title="Web应用的各种安全隐患"></a>Web应用的各种安全隐患</h2><h3 id="Web应用的功能与安全隐患的对应关系"><a href="#Web应用的功能与安全隐患的对应关系" class="headerlink" title="Web应用的功能与安全隐患的对应关系"></a>Web应用的功能与安全隐患的对应关系</h3><p><img src="C:\Users\zlii0\AppData\Roaming\Typora\typora-user-images\image-20201004213007414.png" alt="image-20201004213007414"></p>
+<ul>
+<li>处理过程与输出过程有安全隐患（只针对应用程序，如果将范围扩大至中间件，输入校验也可能有安全隐患）</li>
+<li>输入过程没有安全隐患</li>
+<li>输出过程产生的安全隐患大多有“注入”</li>
+</ul>
+<hr>
+<h3 id="输入处理与安全性"><a href="#输入处理与安全性" class="headerlink" title="输入处理与安全性"></a>输入处理与安全性</h3><p>Web应用的输入是由HTTP请求传入的信息，如GET， POST， Cookie等。Web应用接收到这些值时所作的处理成为输入处理。</p>
+<p>输入处理包含：</p>
+<ul>
+<li><p>检验字符编码的有效性</p>
+</li>
+<li><p>必要时进行字符编码（HTTP消息与程序内部使用编码不一致时需要进行的操作）</p>
+</li>
+<li><p>检验参数字符串的有效性</p>
+</li>
+</ul>
+<p>输入校验</p>
+<ul>
+<li><p>目的：</p>
+<p>如果不进行校验，可能会出现以下结果：</p>
+<p>用户在只接收数字的文本框中填入了符号或字母，保存至数据库时会发生错误</p>
+<p>用户填写完很多项目后点击确认时因发生了内部错误而不得不全部重填</p>
+<p>用户在没有填写邮箱的情况下应用依然执行了发送邮件的处理</p>
+<p>所以，输入校验的目的主要有：</p>
+<ul>
+<li>尽早发现输入错误并提醒用户重新输入，提高了程序的可用性</li>
+<li>防止因错误造成数据不一致等，提高程序的可用性</li>
+</ul>
+</li>
+<li><p>与安全性相关问题</p>
+<p>有些参数忘记防范SQL注入的情况下，因为输入校验只允许字母和数字，可避免一部分安全隐患。</p>
+<p>页面显示处理函数中对字符编码有所疏忽时，因为输入校验时检验了字符编码的有效性，可以避免一定的损害。</p>
+</li>
+</ul>
+<hr>
+<h4 id="二进制安全与空字节攻击"><a href="#二进制安全与空字节攻击" class="headerlink" title="二进制安全与空字节攻击"></a>二进制安全与空字节攻击</h4><p>二进制安全指不管输入值是怎样的字节列都能将其原封不动地进行处理的功能，特别是当包含零值字节（NULL，PHP中为\0）也能正确处理。</p>
+<p>C语言以及UNIX与Windows的API中规定空字节为字符串的结尾。所以，底层为C语言的PHP以及其他脚本语言中，有些函数不能正确地处理空字节。这一类函数被称为不是二进制安全的函数。</p>
+<p>利用空字节的攻击手段被称为空字节攻。空字节本身并不造成伤害，但是通常被用于绕过其他安全隐患的防范策略。</p>
+<p>例如</p>
+<p><code>&lt;body&gt;</code></p>
+<p><code>&lt;?php</code></p>
+<p>​    <code>$p = $_GET[&#39;p&#39;];</code></p>
+<p>​    <code>if (ereg(&#39;^[0-9]+$&#39;, $p) === FALSE) &#123;</code></p>
+<p>​        <code>die(&#39;请输入整数值&#39;);</code></p>
+<p><code>&#125;</code></p>
+<p>​    <code>echo $p;</code></p>
+<p><code>?&gt;</code></p>
+<p><code>&lt;body&gt;</code></p>
+<p>如果使用此URL：<a target="_blank" rel="noopener" href="http://example.jp/42/42-002.php?p=1%00">http://example.jp/42/42-002.php?p=1%00</a><script>alert('XSS')</script></p>
+<p>将弹出XSS对话框，说明该代码绕过了ereg函数的验证。因为%00是空字节，所以被视为字符串的结束，后部分代码被检验函数忽略，检验字符串变成了“1”，所以通过了验证。</p>
+<p>虽然在应用中全部使用二进制安全的函数就可以完全防御空字节攻击，但是大多函数的参考文档中都没有明确记载该函数是否二进制安全。所以，更有效的策略是在应用程序入口使用二进制安全的函数检测输入中是否包含空字节，如果有就报错。</p>
+<hr>
+<h4 id="需要校验的参数"><a href="#需要校验的参数" class="headerlink" title="需要校验的参数"></a>需要校验的参数</h4><p>输入校验的对象为所有的参数。包括hidden参数，单选框，select元素。Cookie中包含会话ID时，Cookie也需要校验。另外，如果应用使用到了Referer时也需要进行校验。</p>
+<hr>
+<h3 id="页面显示相关问题"><a href="#页面显示相关问题" class="headerlink" title="页面显示相关问题"></a>页面显示相关问题</h3><h4 id="跨站脚本"><a href="#跨站脚本" class="headerlink" title="跨站脚本"></a>跨站脚本</h4><p>网页的显示内容会根据外界输入值发生变化，如果页面的HTML文件存在问题，就会有跨站脚本的安全隐患。</p>
+<p>跨站脚本的风险有：</p>
+<ul>
+<li>用户的浏览器运行攻击者的恶意脚本，导致cookie被窃取，用户被冒名顶替</li>
+<li>攻击者可以获得用户的权限来恶意使用web功能</li>
+<li>向用户显示伪造的表单，通过钓鱼攻击窃取用户个人信息</li>
+</ul>
+<p>防范策略为，HTML显示时将HTML中含有特殊意义的字符转义。</p>
+<p>XSS被恶意使用的三种方式：</p>
+<ul>
+<li>窃取Cookie</li>
+<li>通过JavaScript攻击</li>
+<li>篡改网页</li>
+</ul>
+<p>XSS产生原因</p>
+<p>生成HTML过程中，HTML语法中含有特殊意义的字符（元字符）没有被正确处理，导致HTML或JavaScript被注入，使得原来的HTML结构发生变化。为了消除元字符的特殊意义，将其转换为普通字符，就需要用到转义处理。</p>
+<hr>
+<p>XSS对策基础</p>
+<p>使用字符实体进行转义是XSS对策的基础，HTML最低限度的防范策略：</p>
+<ul>
+<li>元素内容中转义&lt; 和 &amp;</li>
+<li>属性值用双括号括起来，并转义 &lt; , “, &amp;</li>
+<li>指定应用相应的字符编码</li>
+</ul>
+<p>辅助对策</p>
+<ul>
+<li>输入校验。通过校验输入值的有效性，当输入不符合条件就显示错误并让用户重新输入。</li>
+<li>给Cookie添加HttpOnly属性。可以禁止JavaScript读取Cookie。这种方法只是限制了攻击者的选择范围，但无法杜绝所有XSS攻击。</li>
+<li>关闭TRACE方法。这是跨站追踪（XST—Cross-Site Tracing）的防范策略。XST指利用JavaScript发送HTTP的TRACE方法来窃取Cookie或Basic认证密码的攻击。</li>
+</ul>
+<p>总结</p>
+<p>根本对策：</p>
+<ul>
+<li>HTML元素内容转义</li>
+<li>属性值转义并用双括号括起来</li>
+<li>明确设置HTTP相应的字符编码</li>
+</ul>
+<p>辅助对策：</p>
+<ul>
+<li>输入校验</li>
+<li>Cookie设置HttpOnly</li>
+<li>关闭TRACE</li>
+</ul>
+<hr>
+<p>href属性与src属性的XSS</p>
+<p>在一些属性，如href属性, img元素, frame元素, iframe元素的src属性。如果属性中URL是由外界传入，外界可以通过<code>javascript:JavaScript</code>代码形式（javascript协议）的URL执行URL代码。</p>
+<p>例</p>
+<p><code>&lt;body&gt;</code></p>
+<p><code>&lt;a href=&quot;&lt;?php echo htmlspecialchars($_GET[&#39;url&#39;]); ?&gt;&quot;&gt; 书签 &lt;/a&gt;</code></p>
+<p><code>&lt;/body&gt;</code></p>
+<p>如果使用以下URL</p>
+<p><code>http://example.jp/43/43-010.php?url=javascript:alert(document.cookie)</code></p>
+<p>则会生成以下代码</p>
+<p><code>&lt;body&gt;</code></p>
+<p><code>&lt;a href=&quot;javascript:alert(document.cookie)&quot;&gt; 书签 &lt;/a&gt;</code></p>
+<p><code>&lt;/body&gt;</code></p>
+<p>生成URL时的对策</p>
+<p>当URL由程序动态生成时，需要对其进行校验，仅允许http和https。另外，通过校验的URL需要作为属性值进行HTML转义。</p>
+<p>URL需要满足的条件：</p>
+<ul>
+<li><p>以http或https开头的绝对URL</p>
+</li>
+<li><p>以 / 开头的相对URL</p>
+</li>
+</ul>
+<p>对URL进行校验</p>
+<p>如果外界可以指定链接的跳转去向，用户就可能被引导至恶意网站，从而使用钓鱼攻击骗取用户信息。所以，可以对URL进行以下检验：</p>
+<ul>
+<li>检查链接目标URL，如果指向外部网站就报错</li>
+<li>当链接是外部URL时，显示一个警告页面提醒用户</li>
+</ul>
+<hr>
+<p>JavaScript的动态生成</p>
+<p>有时，\ ; ‘ “ 等特殊符号没有被进行转义，可能会导致XSS攻击。</p>
+<p>所以：</p>
+<ul>
+<li> 首先将数据作为JavaScript字符串字面量进行转义</li>
+<li>将得到的结果再次进行转义</li>
+</ul>
+<p>例</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>转义后</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>‘\‘</td>
+<td>‘\\‘</td>
+</tr>
+<tr>
+<td>&#39; ‘ &#39;</td>
+<td>&#39; \&#39; &#39;</td>
+</tr>
+<tr>
+<td>&#39; &quot; &#39;</td>
+<td>&#39; \&quot; &#39;</td>
+</tr>
+<tr>
+<td>换行</td>
+<td>‘\n’</td>
+</tr>
+</tbody></table>
+<hr>
+<p>script的XSS</p>
+<p>PHP中escape_js函数可以在特殊符号前插入 \ 进行转义。但是，当输入包含<code>&lt;/script&gt;</code>时，<code>&lt;/script&gt;</code>会被当成JavaScript代码的结束。</p>
+<p>所有，如果构造类似以下的语句就可以实现XSS</p>
+<p><code>&lt;/script&gt;&lt;script&gt;alert(document.cookie)//</code></p>
+<p>对策</p>
+<ul>
+<li>将特殊符号转义</li>
+<li>使用双括号</li>
+<li>如果是在script元素中，确保字符中不存在 &lt;/</li>
+</ul>
+<p><strong>Unicode转义</strong></p>
+<p>将输入字符串全部以\uXXXX的Unicode形式进行转义（不转义减号和点号对安全性没有影响）。</p>
+<hr>
+<h5 id="DOM-based-XSS"><a href="#DOM-based-XSS" class="headerlink" title="DOM based XSS"></a>DOM based XSS</h5><p>攻击者注入的JavaScript代码不会出现在于服务器端生成的HTML中。</p>
+<p>开发博客系统或者SNS网站时，有时需要允许用户使用HTML标签或者自定义CSS，这样会带来XSS风险。</p>
+<p>所以，开发允许用户输入HTML标签或CSS的网站时，最好的方法是使用能够解析HTML文本语法结构的第三方程序库。如PHP中HTML Purifier等。</p>
+<hr>
+<h5 id="错误消息导致的信息漏泄"><a href="#错误消息导致的信息漏泄" class="headerlink" title="错误消息导致的信息漏泄"></a>错误消息导致的信息漏泄</h5><ul>
+<li>错误消息中含有对攻击者有帮助的应用程序内部信息</li>
+<li>通过蓄意攻击使错误信息中显示隐私信息</li>
+</ul>
+<p>详细的错误信息应该以错误日志（Error Log）的形式输出，不应向用户展示。</p>
+<hr>
+<h3 id="SQL相关安全隐患"><a href="#SQL相关安全隐患" class="headerlink" title="SQL相关安全隐患"></a>SQL相关安全隐患</h3><h4 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h4><p>可能造成的影响：</p>
+<ul>
+<li>数据库内信息被外界窃取</li>
+<li>数据库内容被篡改</li>
+<li>登录认证被绕过</li>
+<li>服务器上文件被读取或修改，服务器上程序被执行等</li>
+</ul>
+<p>根据数据库引擎不同，通过SQL注入可能还会达到以下效果：</p>
+<ul>
+<li>执行OS命令</li>
+<li>读取文件</li>
+<li>编辑文件</li>
+<li>通过HTTP请求攻击其他服务器</li>
+</ul>
+<p>通过SQL语句可以调查数据库内存在哪些表和列。SQL标准规格中规定了名为INFORMATION_SCHEMA的数据库，使用期中tables和columns可以从中读取表和列的定义。</p>
+<hr>
+<p>对策：</p>
+<ul>
+<li>使用占位符拼接SQL语句</li>
+<li>拼接时，要确保字面量被正确处理，SQL语句不被更改</li>
+</ul>
+<p>占位符示例</p>
+<p><code>SELECT * FROM books WHERE author = ? ORDER BY id</code></p>
+<p>问号即为占位符，表示将变量或表达式等可变参数填到此处。</p>
+<p>占位符根据实现方法可以分为静态占位符和动态占位符。</p>
+<ul>
+<li><p>静态占位符（也称为预处理语句）</p>
+<p>静态占位符的绑定变量操作在数据库引擎中执行。含有占位符的SQL语句被直接发送到数据库引擎，数据库引擎执行编译等准备工作后确定SQL语句。然后绑定值也被发送至数据库，数据库将收到的值填充进SQL语句中执行。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">op&#x3D;&gt;operation: SELECT * FROM users WHERE id &#x3D; ▲ and pwd &#x3D; ⚪</span><br><span class="line">op1&#x3D;&gt;operation: 编译SQL语句</span><br><span class="line">op2&#x3D;&gt;operation: 变量绑定 </span><br><span class="line">op3&#x3D;&gt;operation: 执行SQL语句</span><br><span class="line"></span><br><span class="line">op-&gt;op1-&gt;op2-&gt;op3</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>理论上来说，之后的SQL语句不能被更改</p>
+</li>
+<li><p>动态占位符</p>
+<p>现在程序中执行绑定变量，然后再将SQL语句发送到数据库进行处理。绑定变量时字面量会被妥善处理，只要过程中没有BUG就不会遭受SQL攻击。</p>
+</li>
+</ul>
+<p>无论静态占位符还是动态占位符都可以消除SQL注入漏洞。但是就理论上来说，静态占位符可以完全消除SQL注入漏洞出现的可能性，而动态占位符可能因为程序问题而造成漏洞。所以应该<strong>尽量采用静态占位符</strong>。</p>
+<p>辅助对策——当根本性对策有疏漏，或者中间件存在漏洞时，可以减轻攻击造成的损害</p>
+<ul>
+<li>不显示详细的错误消息</li>
+<li>检验输入值的有效性</li>
+<li>设置数据库权限（将Web应用数据的用户访问权限设置为所需的最低限度，即使遭受SQL攻击，也能将损失降到最低）</li>
+</ul>
+<h3 id="关键处理中引入的安全隐患"><a href="#关键处理中引入的安全隐患" class="headerlink" title="关键处理中引入的安全隐患"></a>关键处理中引入的安全隐患</h3><p><strong><em>Web应用中，用户登录后执行的操作中有些一旦完成就无法撤销，此类处理称为“关键处理”</em></strong>。如信用卡支付，转账，发送邮件，更改密码等。如果关键处理中存在安全隐患，就会产生跨站请求伪造的漏洞（Cross-Site Request Forgeries –&gt; CSFR ）</p>
+<h4 id="跨站请求伪造（CSFR）"><a href="#跨站请求伪造（CSFR）" class="headerlink" title="跨站请求伪造（CSFR）"></a>跨站请求伪造（CSFR）</h4><p>执行关键处理之前，需要确认该操作是否为用户自愿执行。CSFR指用户只是浏览了恶意网站，但是浏览器擅自执行了关键处理。用户可能遭受以下攻击：</p>
+<ul>
+<li>使用用户账号购物，转账等</li>
+<li>注销用户账号</li>
+<li>使用用户账号发布帖子</li>
+<li>更好账户的邮箱，密码等</li>
+</ul>
+<p>CSFR仅限关键处理被恶意使用，但是用户的个人信息是无法通过CSFR窃取的。但是，如果攻击者更改了用户密码，就有可能窃取用户信息。</p>
+<p>为了预防CSFR漏洞，需要在执行关键处理前确认该操作确实是用户自愿发起的。</p>
+<p>另外，企业或组织内部网络也可能遭到CSFR攻击。如防火墙或路由器配置页面中存在的CSFR隐患。如果网络管理员浏览了恶意网站，就可能导致机器被恶意设置，从而导致损失。但是这种攻击通常需要提前得知目标的详细安全隐患。一般有以下方法：</p>
+<ul>
+<li>调查市面上的软件或硬件的安全漏洞</li>
+<li>离职人员或有访问内部网络经验的人进行攻击</li>
+<li>内部人员伪装成外部人员进行攻击</li>
+</ul>
+<h4 id="CSFR产生原因"><a href="#CSFR产生原因" class="headerlink" title="CSFR产生原因"></a>CSFR产生原因</h4><ol>
+<li>form元素的action属性可以指定任意域名的URL（即使恶意网站也可以向目标网站发送请求）</li>
+<li>保存在Cookie中的会话ID会自动发送给对象网站（请求即使经过恶意网站，会话ID的Cookie依然会发送）</li>
+</ol>
+<h4 id="对策"><a href="#对策" class="headerlink" title="对策"></a>对策</h4><ul>
+<li>筛选出需要防范攻击的页面（更改密码，购买商品，确认个人信息等页面）</li>
+<li>使代码能够辨别请求是否来自正规用户且为自愿</li>
+</ul>
+<p>判断请求是否是正规用户自愿发送的方法有三类</p>
+<ul>
+<li>嵌入机密信息（令牌Token）</li>
+<li>再次输入密码</li>
+<li>检验Referer</li>
+</ul>
+<p>会话ID是一种简单的令牌实现方式。接收令牌的请求必须是POST方法。因为如果使用GET发送机密信息，令牌信息可能通过Referer泄露。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/03/Web%E5%BA%94%E7%94%A8%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97%E7%AC%94%E8%AE%B0/" data-id="cki8dlp9o0001dc3572jxatrd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/03/hello-world/" class="article-date">
+  <time datetime="2020-12-03T05:02:12.218Z" itemprop="datePublished">2020-12-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/12/03/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/03/hello-world/" data-id="cki8dlp9b0000dc355pafgsuo" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/12/03/Web%E5%BA%94%E7%94%A8%E6%9D%83%E5%A8%81%E6%8C%87%E5%8D%97%E7%AC%94%E8%AE%B0/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2020/12/03/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
